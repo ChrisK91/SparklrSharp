@@ -15,6 +15,9 @@ namespace SparklrSharp.Communications
     /// </summary>
     internal class WebClient
     {
+        /// <summary>
+        /// Stores the cookies across multiple requests
+        /// </summary>
         private CookieContainer cookies = new CookieContainer();
 
         /// <summary>
@@ -60,6 +63,13 @@ namespace SparklrSharp.Communications
             }
         }
 
+        /// <summary>
+        /// Performs a GET request on the server and deserializes it into the given type
+        /// </summary>
+        /// <typeparam name="T">The desired class</typeparam>
+        /// <param name="uri">The URI to request</param>
+        /// <param name="parameters">The paramteres to append. Will be URLencoded</param>
+        /// <returns>A response containing the status code and the created object</returns>
         internal async Task<SparklrResponse<T>> GetJSONResponseAsync<T>(string uri, params string[] parameters)
         {
             SparklrResponse<string> response = await GetRawResponseAsync(uri, parameters);
@@ -69,6 +79,11 @@ namespace SparklrSharp.Communications
             return result;
         }
 
+        /// <summary>
+        /// Handles the creation of a SparklrResponse from a HttpWebResponse. Will treat three digit responses as status codes.
+        /// </summary>
+        /// <param name="response">The response</param>
+        /// <returns>A SparklrResponse with the correct status code and content</returns>
         private SparklrResponse<string> CreateResponse(HttpWebResponse response)
         {
             if (response.StatusCode == HttpStatusCode.Forbidden)
@@ -114,6 +129,11 @@ namespace SparklrSharp.Communications
             }
         }
 
+        /// <summary>
+        /// Checks if the given string only consists of numbers
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
         private static bool isDigitsOnly(string str)
         {
             foreach (char c in str)
@@ -121,7 +141,6 @@ namespace SparklrSharp.Communications
                 if (c < '0' || c > '9')
                     return false;
             }
-
             return true;
         }
     }

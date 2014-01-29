@@ -8,10 +8,26 @@ namespace SparklrSharp
 {
     public partial class Connection
     {
-        public async Task<string> GetInbox()
+        /// <summary>
+        /// Retreives all messages
+        /// </summary>
+        /// <returns></returns>
+        internal async Task<Sparklr.Message[]> GetInbox()
         {
             var response = await webClient.GetJSONResponseAsync<JSONRepresentations.Message[]>("inbox");
-            return "";
+
+            Sparklr.Message[] messages = new Sparklr.Message[response.Response.Length];
+
+            for (int i = 0; i < response.Response.Length; i++)
+            {
+                messages[i] = new Sparklr.Message(
+                        response.Response[i].message,
+                        response.Response[i].time,
+                        response.Response[i].from
+                    );
+            }
+
+            return messages;
         }
     }
 }

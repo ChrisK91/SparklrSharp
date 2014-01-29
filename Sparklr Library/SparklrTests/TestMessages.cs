@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
 using SparklrSharp;
+using SparklrSharp.Sparklr;
 
 namespace SparklrTests
 {
@@ -20,7 +21,19 @@ namespace SparklrTests
         public async Task TestInbox()
         {
             Connection conn = await Credentials.CreateSession();
-            string result = await conn.GetInbox();
+            var result = await conn.GetInbox();
+
+            Assert.IsTrue(result.Length >= 1);
+        }
+
+        [TestMethod]
+        public async Task TestInboxRefresh()
+        {
+            Connection conn = await Credentials.CreateSession();
+
+            Assert.IsNull(SparklrSharp.Sparklr.Message.Inbox);
+            await conn.RefreshInboxAsync();
+            Assert.IsTrue(SparklrSharp.Sparklr.Message.Inbox.Count >= 1);
         }
     }
 }

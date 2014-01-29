@@ -5,6 +5,9 @@ using System.Text;
 
 namespace SparklrSharp.Sparklr
 {
+    /// <summary>
+    /// Represents a User on the Sparklr service
+    /// </summary>
     public class User
     {
     }
