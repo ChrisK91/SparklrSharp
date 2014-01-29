@@ -10,8 +10,8 @@ namespace SparklrSharp
     {
         public async Task<string> GetInbox()
         {
-            var response = await webClient.GetRawResponseAsync("inbox");
-            return response.Response;
+            var response = await webClient.GetJSONResponseAsync<JSONRepresentations.Message[]>("inbox");
+            return "";
         }
     }
 }

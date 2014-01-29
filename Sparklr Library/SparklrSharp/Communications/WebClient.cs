@@ -1,4 +1,5 @@
-﻿using SparklrSharp.Exceptions;
+﻿using Newtonsoft.Json;
+using SparklrSharp.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -57,6 +58,15 @@ namespace SparklrSharp.Communications
             {
                  return CreateResponse((HttpWebResponse)(ex.Response));
             }
+        }
+
+        internal async Task<SparklrResponse<T>> GetJSONResponseAsync<T>(string uri, params string[] parameters)
+        {
+            SparklrResponse<string> response = await GetRawResponseAsync(uri, parameters);
+
+            SparklrResponse<T> result = new SparklrResponse<T>(response.Code, JsonConvert.DeserializeObject<T>(response.Response));
+
+            return result;
         }
 
         private SparklrResponse<string> CreateResponse(HttpWebResponse response)

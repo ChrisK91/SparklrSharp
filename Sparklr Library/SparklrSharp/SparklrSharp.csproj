@@ -37,6 +37,7 @@
     <Compile Include="Connection.Messages.cs" />
     <Compile Include="Connection.General.cs" />
     <Compile Include="Extensions\SparklrResponseValidation.cs" />
+    <Compile Include="JSONRepresentations\Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Communications\SparklrResponse.cs" />
     <Compile Include="Communications\WebClient.cs" />
