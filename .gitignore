@@ -6,6 +6,9 @@
 *.user
 *.sln.docstates
 
+#ignore credentials
+[Cc]redentials.cs
+
 # Build results
 
 [Dd]ebug/
