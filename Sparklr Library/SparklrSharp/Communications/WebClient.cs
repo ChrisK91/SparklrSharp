@@ -39,7 +39,7 @@ namespace SparklrSharp.Communications
         /// <param name="uri">The location of the given ressource. Will be appended to the baseUrl, i.e. sparklr.me/api/</param>
         /// <param name="parameters">A set of parameters to append. Will be urlencoded and joined to the Url.</param>
         /// <returns>The result of the request</returns>
-        internal async Task<SparklrResponse<string>> GetRawResponseAsync(string uri, params string[] parameters)
+        internal async Task<SparklrResponse<string>> GetRawResponseAsync(string uri, params object[] parameters)
         {
             string url = baseUrl + uri;
 
@@ -70,13 +70,19 @@ namespace SparklrSharp.Communications
         /// <param name="uri">The URI to request</param>
         /// <param name="parameters">The paramteres to append. Will be URLencoded</param>
         /// <returns>A response containing the status code and the created object</returns>
-        internal async Task<SparklrResponse<T>> GetJSONResponseAsync<T>(string uri, params string[] parameters)
+        internal async Task<SparklrResponse<T>> GetJSONResponseAsync<T>(string uri, params object[] parameters)
         {
             SparklrResponse<string> response = await GetRawResponseAsync(uri, parameters);
 
-            SparklrResponse<T> result = new SparklrResponse<T>(response.Code, JsonConvert.DeserializeObject<T>(response.Response));
-
-            return result;
+            try
+            {
+                SparklrResponse<T> result = new SparklrResponse<T>(response.Code, JsonConvert.DeserializeObject<T>(response.Response));
+                return result;
+            }
+            catch (JsonSerializationException)
+            {
+                throw new Exceptions.InvalidResponseException() { Response = response };
+            }
         }
 
         /// <summary>

@@ -12,7 +12,7 @@ namespace SparklrTests
         public async Task TestInvalidAuthentication()
         {
             Connection conn = new Connection();
-            bool result = await conn.Signin(Credentials.ValidUsername, Credentials.InvalidPassword);
+            bool result = await conn.SigninAsync(Credentials.ValidUsername, Credentials.InvalidPassword);
             Assert.IsFalse(result);
         }
 
@@ -20,7 +20,7 @@ namespace SparklrTests
         public async Task TestValidAuthentication()
         {
             Connection conn = new Connection();
-            bool result = await conn.Signin(Credentials.ValidUsername, Credentials.ValidPassword);
+            bool result = await conn.SigninAsync(Credentials.ValidUsername, Credentials.ValidPassword);
             Assert.IsTrue(result);
         }
 
@@ -28,9 +28,9 @@ namespace SparklrTests
         public async Task TestLogout()
         {
             Connection conn = new Connection();
-            bool result = await conn.Signin(Credentials.ValidUsername, Credentials.ValidPassword);
+            bool result = await conn.SigninAsync(Credentials.ValidUsername, Credentials.ValidPassword);
             Assert.IsTrue(result);
-            result = await conn.Signoff();
+            result = await conn.SignoffAsync();
             Assert.IsTrue(result);
         }
     }

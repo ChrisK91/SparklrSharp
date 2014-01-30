@@ -12,5 +12,10 @@ namespace SparklrSharp.Extensions
         {
             return (response.Code == System.Net.HttpStatusCode.OK) && (response.Response == "true");
         }
+
+        internal static bool IsOkAndFalse(this SparklrResponse<string> response)
+        {
+            return (response.Code == System.Net.HttpStatusCode.OK) && (response.Response == "false");
+        }
     }
 }

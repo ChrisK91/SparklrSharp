@@ -14,23 +14,13 @@ namespace SparklrSharp
     /// </summary>
     public partial class Connection
     {
-        private Communications.WebClient webClient;
-
-        /// <summary>
-        /// Creates a new instance of Connection
-        /// </summary>
-        public Connection()
-        {
-            webClient = new Communications.WebClient();
-        }
-
         /// <summary>
         /// Authenticates the user with the sparklr server
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns>true if successful, otherwise false</returns>
-        public async Task<bool> Signin(string username, string password)
+        public async Task<bool> SigninAsync(string username, string password)
         {
             try
             {
@@ -48,7 +38,7 @@ namespace SparklrSharp
         /// Terminates the sparklr session
         /// </summary>
         /// <returns>Always true</returns>
-        public async Task<bool> Signoff()
+        public async Task<bool> SignoffAsync()
         {
             //will always return true or 403. 403 will throw an exception
             return (await webClient.GetRawResponseAsync("signoff")).IsOkAndTrue();

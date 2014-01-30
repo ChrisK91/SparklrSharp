@@ -4,22 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SparklrSharp
-{
-    public static partial class GlobalExtensions
-    {
-        /// <summary>
-        /// Updates the Inbox via the given connection
-        /// </summary>
-        /// <param name="conn">The connection on which to update the Messages</param>
-        /// <returns></returns>
-        public static async Task RefreshInboxAsync(this Connection conn)
-        {
-            SparklrSharp.Sparklr.Message.Inbox = await conn.GetInbox();
-        }
-    }
-}
-
 namespace SparklrSharp.Sparklr
 {
     /// <summary>
@@ -31,17 +15,25 @@ namespace SparklrSharp.Sparklr
         public long Timestamp { get; private set; }
         public User ConversationPartner { get; private set; }
 
-        /// <summary>
-        /// Contains the current Inbox. Needs to be refreshed manually
-        /// </summary>
-        public static ICollection<Message> Inbox { get; internal set; }
-
-        internal Message(string content, long timestamp, int userid)
+        private Message(string content, long timestamp, User conversationPartner)
         {
             Content = content;
             Timestamp = timestamp;
+            ConversationPartner = conversationPartner;
+        }
 
-            //TODO: support users
+        /// <summary>
+        /// Creates a message and fills the user details
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="timestamp"></param>
+        /// <param name="userid"></param>
+        /// <param name="conn"></param>
+        /// <returns></returns>
+        internal static async Task<Message> CreateMessageAsync(string content, long timestamp, int userid, Connection conn)
+        {
+            User conversationPartner = await User.CreateUserAsync(userid, conn);
+            return new Message(content, timestamp, conversationPartner);
         }
     }
 }

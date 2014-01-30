@@ -13,7 +13,7 @@ namespace SparklrTests
         {
             Connection conn = new Connection();
 
-            bool result = await conn.GetAwake();
+            bool result = await conn.GetAwakeAsync();
 
             Assert.IsTrue(result);
         }

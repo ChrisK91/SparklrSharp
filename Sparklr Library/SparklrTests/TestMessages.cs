@@ -14,14 +14,14 @@ namespace SparklrTests
         public async Task TestNotAuthorized()
         {
             Connection conn = new Connection();
-            var response = await conn.GetInbox();
+            var response = await conn.GetInboxAsync();
         }
 
         [TestMethod]
         public async Task TestInbox()
         {
             Connection conn = await Credentials.CreateSession();
-            var result = await conn.GetInbox();
+            var result = await conn.GetInboxAsync();
 
             Assert.IsTrue(result.Length >= 1);
         }
@@ -31,9 +31,9 @@ namespace SparklrTests
         {
             Connection conn = await Credentials.CreateSession();
 
-            Assert.IsNull(SparklrSharp.Sparklr.Message.Inbox);
+            Assert.IsNull(conn.Inbox);
             await conn.RefreshInboxAsync();
-            Assert.IsTrue(SparklrSharp.Sparklr.Message.Inbox.Count >= 1);
+            Assert.IsTrue(conn.Inbox.Count >= 1);
         }
     }
 }
