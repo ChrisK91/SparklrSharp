@@ -137,10 +137,24 @@ namespace SampleApplication.cs
                         await conversation.LoadMore();
                     }
 
+                    suppressOutput = true;
                     //Now we can iterate over all retreived messages and print them to the console.
                     foreach (Message m in conversation.Messages)
                     {
                         Console.WriteLine("{0}:\t{1}", m.ConversationPartner.Name.PadRight(16, ' '), m.Content);
+                    }
+                    suppressOutput = false;
+
+                    //Finally we send a message on our own
+                    Console.WriteLine("Enter a message to send (or press enter to skip)");
+
+                    suppressOutput = true;
+                    string content = Console.ReadLine();
+                    suppressOutput = false;
+
+                    if (content != String.Empty)
+                    {
+                        await conversation.SendMessage(content);
                     }
                 }
 

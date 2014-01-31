@@ -82,9 +82,9 @@ namespace SparklrSharp
         /// <param name="conn"></param>
         /// <param name="userid"></param>
         /// <returns></returns>
-        public static async Task<Conversation> GetConversationWithUseridAsync(this Connection conn, int userid)
+        public static async Task<Conversation> GetConversationWithUserIdAsync(this Connection conn, int userid)
         {
-            User u = await User.CreateUserAsync(userid, conn);
+            User u = await User.InstanciateUserAsync(userid, conn);
             return GetConversationWith(conn, u);
         }
     }

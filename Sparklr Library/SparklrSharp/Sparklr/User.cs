@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,15 @@ namespace SparklrSharp.Sparklr
         public long AvatarId { get; private set; }
         public bool Following { get; private set; }
         public string Bio { get; private set; }
+        public ReadOnlyCollection<Post> Timeline
+        {
+            get
+            {
+                return new ReadOnlyCollection<Post>(timeline);
+            }
+        }
+
+        internal List<Post> timeline { get; private set; }
 
         private static Dictionary<int, User> userCache = new Dictionary<int, User>();
 
@@ -26,18 +36,26 @@ namespace SparklrSharp.Sparklr
         /// <param name="userid">The userid of the specified user</param>
         /// <param name="conn">The connection on which to run the identification</param>
         /// <returns></returns>
-        internal static async Task<User> CreateUserAsync(int userid, Connection conn)
+        internal static async Task<User> InstanciateUserAsync(int userid, Connection conn)
         {
-            if (userCache.ContainsKey(userid))
-            {
-                return userCache[userid];
-            }
-            else
+            if (!userCache.ContainsKey(userid))
             {
                 User u = await conn.GetUserAsync(userid);
-                userCache.Add(userid, u);
-                return u;
+                //This will always add the User to the cache
             }
+
+            return userCache[userid];
+        }
+
+        internal static User InstanciateUser(int userid, string name, string handle, long avatarid, bool following, string bio)
+        {
+            if (!userCache.ContainsKey(userid))
+            {
+                User u = new User(userid, name, handle, avatarid, following, bio);
+                userCache.Add(userid, u);
+            }
+
+            return userCache[userid];
         }
 
         /// <summary>
@@ -49,7 +67,7 @@ namespace SparklrSharp.Sparklr
         /// <param name="avatarid">the avatarid</param>
         /// <param name="following">true if following</param>
         /// <param name="bio">the biography</param>
-        internal User(int userid, string name, string handle, long avatarid, bool following, string bio)
+        private User(int userid, string name, string handle, long avatarid, bool following, string bio)
         {
             this.UserId = userid;
             this.Name = name;
@@ -57,6 +75,8 @@ namespace SparklrSharp.Sparklr
             this.AvatarId = avatarid;
             this.Following = following;
             this.Bio = bio;
+
+            this.timeline = new List<Post>();
         }
     }
 }

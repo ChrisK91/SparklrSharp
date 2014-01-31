@@ -32,7 +32,7 @@ namespace SparklrSharp.Sparklr
         /// <returns></returns>
         internal static async Task<Message> CreateMessageAsync(string content, long timestamp, int userid, Connection conn)
         {
-            User conversationPartner = await User.CreateUserAsync(userid, conn);
+            User conversationPartner = await User.InstanciateUserAsync(userid, conn);
             return new Message(content, timestamp, conversationPartner);
         }
     }

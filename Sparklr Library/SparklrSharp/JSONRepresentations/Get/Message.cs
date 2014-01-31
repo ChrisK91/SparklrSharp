@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SparklrSharp.JSONRepresentations
+namespace SparklrSharp.JSONRepresentations.Get
 {
     /// <summary>
     /// The JSON representation of a message. You most likely don't want to use it.

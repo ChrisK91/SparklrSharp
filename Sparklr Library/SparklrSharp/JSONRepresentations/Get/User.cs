@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace SparklrSharp.JSONRepresentations
+namespace SparklrSharp.JSONRepresentations.Get
 {
     public class User
     {
@@ -14,5 +14,7 @@ namespace SparklrSharp.JSONRepresentations
         public bool following { get; set; }
         public string name { get; set; }
         public string bio { get; set; }
+
+        public List<TimelinePost> timeline { get; set; }
     }
 }

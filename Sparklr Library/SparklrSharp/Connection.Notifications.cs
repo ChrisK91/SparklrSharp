@@ -11,7 +11,7 @@ namespace SparklrSharp
     {
         internal async Task<Sparklr.Notification[]> GetNotificationsAsync()
         {
-            SparklrResponse<JSONRepresentations.Notification[]> result = await webClient.GetJSONResponseAsync<JSONRepresentations.Notification[]>("notifications");
+            SparklrResponse<JSONRepresentations.Get.Notification[]> result = await webClient.GetJSONResponseAsync<JSONRepresentations.Get.Notification[]>("notifications");
 
             if (result.Code == System.Net.HttpStatusCode.OK)
             {
@@ -21,8 +21,8 @@ namespace SparklrSharp
                 {
                     notifications[i] = new Sparklr.Notification(
                             result.Response[i].id,
-                            await Sparklr.User.CreateUserAsync(result.Response[i].from, this),
-                            await Sparklr.User.CreateUserAsync(result.Response[i].to, this),
+                            await Sparklr.User.InstanciateUserAsync(result.Response[i].from, this),
+                            await Sparklr.User.InstanciateUserAsync(result.Response[i].to, this),
                             (Sparklr.NotificationType)result.Response[i].type,
                             result.Response[i].time,
                             result.Response[i].body,

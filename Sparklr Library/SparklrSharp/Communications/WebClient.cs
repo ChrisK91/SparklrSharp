@@ -41,17 +41,38 @@ namespace SparklrSharp.Communications
         /// <returns>The result of the request</returns>
         internal async Task<SparklrResponse<string>> GetRawResponseAsync(string uri, params object[] parameters)
         {
+            string url = buildUrl(uri, parameters);
+            HttpWebRequest request = prepareRequest(url);
+
+            try
+            {
+                return CreateResponse((HttpWebResponse)(await request.GetResponseAsync()));
+            }
+            catch (WebException ex)
+            {
+                 return CreateResponse((HttpWebResponse)(ex.Response));
+            }
+        }
+
+        private static string buildUrl(string uri, object[] parameters)
+        {
             string url = baseUrl + uri;
 
             //TODO: Urlencode
             if (parameters.Length > 0)
                 url = url + "/" + String.Join("/", parameters);
+            return url;
+        }
 
-            HttpWebRequest request = WebRequest.CreateHttp(url);
-            request.CookieContainer = cookies;
+        internal async Task<SparklrResponse<string>> PostJsonAsyncRawResponse<T>(string uri, T jsonObject, params object[] parameters)
+        {
+            string url = buildUrl(uri, parameters);
+            HttpWebRequest request = prepareRequest(url);
 
-            if (X != null)
-                request.Headers["X-X"] = X;
+            string xdata = JsonConvert.SerializeObject(jsonObject);
+
+            request.Method = "POST";
+            request.Headers["X-Data"] = xdata;
 
             try
             {
@@ -148,6 +169,21 @@ namespace SparklrSharp.Communications
                     return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// Creates an HttpWebRequest with the appropriate headers
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        private HttpWebRequest prepareRequest(string url)
+        {
+            HttpWebRequest request = WebRequest.CreateHttp(url);
+            request.CookieContainer = cookies;
+
+            if (X != null)
+                request.Headers["X-X"] = X;
+            return request;
         }
     }
 }

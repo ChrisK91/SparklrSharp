@@ -1,5 +1,6 @@
 ﻿using SparklrSharp.Communications;
 using SparklrSharp.Sparklr;
+using SparklrSharp.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace SparklrSharp
         /// <returns></returns>
         internal async Task<Sparklr.Message[]> GetInboxAsync()
         {
-            SparklrResponse<JSONRepresentations.Message[]> response = await webClient.GetJSONResponseAsync<JSONRepresentations.Message[]>("inbox");
+            SparklrResponse<JSONRepresentations.Get.Message[]> response = await webClient.GetJSONResponseAsync<JSONRepresentations.Get.Message[]>("inbox");
 
             Sparklr.Message[] messages = await parseJSONMessages(response);
 
@@ -36,12 +37,12 @@ namespace SparklrSharp
         /// <returns></returns>
         internal async Task<Message[]> GetConversationAsync(int userId, long? starttime = null)
         {
-            SparklrResponse<JSONRepresentations.Message[]> response;
+            SparklrResponse<JSONRepresentations.Get.Message[]> response;
 
             if (starttime == null)
-                response = await webClient.GetJSONResponseAsync<JSONRepresentations.Message[]>("chat", userId);
+                response = await webClient.GetJSONResponseAsync<JSONRepresentations.Get.Message[]>("chat", userId);
             else
-                response = await webClient.GetJSONResponseAsync<JSONRepresentations.Message[]>("chat", userId + "?starttime=" + starttime);
+                response = await webClient.GetJSONResponseAsync<JSONRepresentations.Get.Message[]>("chat", userId + "?starttime=" + starttime);
 
             Sparklr.Message[] messages = await parseJSONMessages(response);
 
@@ -53,7 +54,7 @@ namespace SparklrSharp
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        private async Task<Message[]> parseJSONMessages(SparklrResponse<JSONRepresentations.Message[]> response)
+        private async Task<Message[]> parseJSONMessages(SparklrResponse<JSONRepresentations.Get.Message[]> response)
         {
             Sparklr.Message[] messages = new Sparklr.Message[response.Response.Length];
 
@@ -67,6 +68,42 @@ namespace SparklrSharp
                     );
             }
             return messages;
+        }
+
+        internal Task<bool> SendMessageAsync(string content, User recipient)
+        {
+            return SendMessageAsync(content, recipient.UserId);
+        }
+
+        internal async Task<bool> SendMessageAsync(string content, int userid)
+        {
+            try
+            {
+                JSONRepresentations.Post.Message m = new JSONRepresentations.Post.Message()
+                                                            {
+                                                                message = content,
+                                                                to = userid
+                                                            };
+
+                SparklrResponse<string> result = await webClient.PostJsonAsyncRawResponse("chat", m);
+
+                if (result.IsOkAndTrue())
+                {
+                    return true;
+                }
+                else if (result.Code == System.Net.HttpStatusCode.BadRequest)
+                {
+                    throw new ArgumentException("The message you wanted to send was not accepted by the server, maybe it was too long?", content);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exceptions.NotAuthorizedException)
+            {
+                throw new Exceptions.NotAuthorizedException("You are either not authorized or blocked by the specified user.");
+            }
         }
     }
 }

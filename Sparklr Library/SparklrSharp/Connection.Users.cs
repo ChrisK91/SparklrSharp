@@ -1,5 +1,6 @@
 ﻿using SparklrSharp.Communications;
 using SparklrSharp.Extensions;
+using SparklrSharp.Sparklr;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +21,39 @@ namespace SparklrSharp
         {
             try
             {
-                SparklrResponse<JSONRepresentations.User> result = await webClient.GetJSONResponseAsync<JSONRepresentations.User>("user", id);
+                SparklrResponse<JSONRepresentations.Get.User> result = await webClient.GetJSONResponseAsync<JSONRepresentations.Get.User>("user", id);
 
                 if (result.Code == System.Net.HttpStatusCode.OK)
                 {
-                    return new Sparklr.User(result.Response.user, result.Response.name, result.Response.handle, result.Response.avatarid ?? -1, result.Response.following, result.Response.bio);
+                    User u = User.InstanciateUser(
+                        result.Response.user,
+                        result.Response.name,
+                        result.Response.handle,
+                        result.Response.avatarid ?? -1,
+                        result.Response.following,
+                        result.Response.bio);
+
+                    foreach (JSONRepresentations.Get.TimelinePost p in result.Response.timeline)
+                    {
+                        u.timeline.Add(
+                                Post.InstanciatePost(
+                                    p.id,
+                                    await User.InstanciateUserAsync(p.from, this),
+                                    p.network,
+                                    p.type,
+                                    p.meta,
+                                    p.time,
+                                    p.@public ?? false,
+                                    p.message,
+                                    p.origid ?? -1,
+                                    p.via != null ? await User.InstanciateUserAsync((int)p.via, this) : null,
+                                    p.commentcount ?? 0,
+                                    p.modified ?? -1
+                                )
+                            );
+                    }
+
+                    return u;
                 }
                 else
                 {

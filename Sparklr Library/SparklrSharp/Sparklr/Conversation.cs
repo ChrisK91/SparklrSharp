@@ -63,12 +63,6 @@ namespace SparklrSharp.Sparklr
         /// </summary>
         private Connection conn;
 
-        public bool SendMessage(string content)
-        {
-            NeedsRefresh = true;
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Loads more messages.
         /// </summary>
@@ -103,6 +97,17 @@ namespace SparklrSharp.Sparklr
 
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Sends a message in the current conversation.
+        /// </summary>
+        /// <param name="message">The message to send</param>
+        /// <returns>true on success, otherwise an exception is thrown</returns>
+        public Task<bool> SendMessage(string content)
+        {
+            NeedsRefresh = true;
+            return conn.SendMessageAsync(content, ConversationPartner);
         }
     }
 }
