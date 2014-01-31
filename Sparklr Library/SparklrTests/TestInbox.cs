@@ -7,7 +7,7 @@ using SparklrSharp.Sparklr;
 namespace SparklrTests
 {
     [TestClass]
-    public class TestMessages
+    public class TestInbox
     {
         [TestMethod]
         [ExpectedException(typeof(SparklrSharp.Exceptions.NotAuthorizedException))]
@@ -18,7 +18,7 @@ namespace SparklrTests
         }
 
         [TestMethod]
-        public async Task TestInbox()
+        public async Task TestInboxAuthorized()
         {
             Connection conn = await Credentials.CreateSession();
             var result = await conn.GetInboxAsync();

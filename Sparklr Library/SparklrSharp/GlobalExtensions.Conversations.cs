@@ -75,5 +75,17 @@ namespace SparklrSharp
         {
             return GetConversationWith(conn, u);
         }
+
+        /// <summary>
+        /// Retreives (or creates) a conversation with the user with the given id.
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <param name="userid"></param>
+        /// <returns></returns>
+        public static async Task<Conversation> GetConversationWithUseridAsync(this Connection conn, int userid)
+        {
+            User u = await User.CreateUserAsync(userid, conn);
+            return GetConversationWith(conn, u);
+        }
     }
 }

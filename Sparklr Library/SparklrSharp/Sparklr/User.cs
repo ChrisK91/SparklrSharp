@@ -35,6 +35,7 @@ namespace SparklrSharp.Sparklr
             else
             {
                 User u = await conn.GetUserAsync(userid);
+                userCache.Add(userid, u);
                 return u;
             }
         }
