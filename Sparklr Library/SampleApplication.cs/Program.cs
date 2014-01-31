@@ -94,12 +94,50 @@ namespace SampleApplication.cs
                 //After the refresh we can dump the messages.
                 Console.WriteLine("You have {0} conversations.", conn.Inbox.Count);
 
+                int index = 0;
                 foreach (Message m in conn.Inbox)
                 {
-                    Console.WriteLine("Converstation with {0}(@{1}):\t{2}", m.ConversationPartner.Name, m.ConversationPartner.Handle, m.Content);
+                    Console.WriteLine("{3}: Converstation with {0}(@{1}):\t{2}", m.ConversationPartner.Name, m.ConversationPartner.Handle, m.Content, index);
+                    index++;
                 }
 
-                //logout
+                //We now let the user select a conversation he wants to read on the console.
+                Console.WriteLine("Enter the conversation you want to read.");
+
+                suppressOutput = true;
+                int selected = Convert.ToInt32(Console.ReadLine());
+                suppressOutput = false;
+
+                if (selected < index && selected >= 0)
+                {
+                    Console.WriteLine("Retreiving conversation with {0}.", conn.Inbox[selected].ConversationPartner.Name);
+
+                    //We retreive the appropriate connection.
+                    Conversation conversation = conn.GetConversationWith(conn.Inbox[selected].ConversationPartner);
+
+                    Console.WriteLine("Loading messages...");
+
+                    //Now we can load more messages until everything is loaded. Messages will be loaded in chunks of 30 messages per request.
+                    //You most likely don't even need all messages, so you can load them on demand
+
+                    //There is also an extension method that returns an IEnumerable<Message>, it is however synchronous.
+                    //You can retreive the IEnumerable by calling conn.ConversationWith(USER) and using it driectly
+                    //Example: foreach(Message m in conn.ConversationWith(USER))
+
+                    while (conversation.NeedsRefresh)
+                    {
+                        Console.WriteLine("Loading more messages, we currently loaded {0} messages in total", conversation.Messages.Count);
+                        await conversation.LoadMore();
+                    }
+
+                    //Now we can iterate over all retreived messages and print them to the console.
+                    foreach (Message m in conversation.Messages)
+                    {
+                        Console.WriteLine("{0}:\t{1}", m.ConversationPartner.Name.PadRight(16, ' '), m.Content);
+                    }
+                }
+
+                //Finally we sign out.
                 await conn.SignoffAsync();
                 Console.WriteLine("Signed out");
                 done = true;

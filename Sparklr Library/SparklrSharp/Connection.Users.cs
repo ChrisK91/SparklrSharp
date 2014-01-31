@@ -11,7 +11,7 @@ namespace SparklrSharp
     public partial class Connection
     {
         /// <summary>
-        /// Retreives the user from the sparklr service
+        /// Retreives the user from the sparklr service. Throws a NoDataFoundException if the specified user is invalid.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SparklrSharp.Sparklr
 {
     /// <summary>
-    /// Provides a representation of messages on the Sparklr service
+    /// Provides a representation of messages on the Sparklr service.
     /// </summary>
     public class Message
     {

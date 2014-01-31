@@ -11,6 +11,9 @@ namespace SparklrSharp
 {
     public partial class Connection
     {
+        /// <summary>
+        /// handles communication with the SparklrServer
+        /// </summary>
         private Communications.WebClient webClient;
 
         /// <summary>
