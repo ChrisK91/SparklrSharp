@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SparklrSharp.Sparklr
 {
+    /// <summary>
+    /// Represents a conversation on the sparklr service
+    /// </summary>
     public class Conversation
     {
         /// <summary>
@@ -102,7 +105,7 @@ namespace SparklrSharp.Sparklr
         /// <summary>
         /// Sends a message in the current conversation.
         /// </summary>
-        /// <param name="message">The message to send</param>
+        /// <param name="content">The message to send</param>
         /// <returns>true on success, otherwise an exception is thrown</returns>
         public Task<bool> SendMessage(string content)
         {

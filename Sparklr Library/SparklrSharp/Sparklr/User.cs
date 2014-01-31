@@ -12,12 +12,39 @@ namespace SparklrSharp.Sparklr
     /// </summary>
     public class User
     {
+        /// <summary>
+        /// The ID
+        /// </summary>
         public int UserId { get; private set; }
+
+        /// <summary>
+        /// The name
+        /// </summary>
         public string Name { get; private set; }
+
+        /// <summary>
+        /// The handle (without @)
+        /// </summary>
         public string Handle { get; private set; }
+
+        /// <summary>
+        /// The avatar-id. -1 if no avatar is selected.
+        /// </summary>
         public long AvatarId { get; private set; }
+
+        /// <summary>
+        /// True if the logged in user is following this user.
+        /// </summary>
         public bool Following { get; private set; }
+
+        /// <summary>
+        /// The biography of the user.
+        /// </summary>
         public string Bio { get; private set; }
+
+        /// <summary>
+        /// The recent posts of this user.
+        /// </summary>
         public ReadOnlyCollection<Post> Timeline
         {
             get

@@ -35,7 +35,7 @@ namespace SparklrTests
             await conn.RefreshInboxAsync();
             await conn.SignoffAsync();
 
-            Conversation convo = conn.GetConversationWith(conn.Inbox[0].ConversationPartner);
+            Conversation convo = conn.GetConversationWith(conn.Inbox[0].Author);
             await convo.LoadMore();
         }
 
@@ -45,7 +45,7 @@ namespace SparklrTests
             Connection conn = await Credentials.CreateSession();
             await conn.RefreshInboxAsync();
 
-            User u = (from Message m in conn.Inbox where m.ConversationPartner.UserId == TestMessagesFromId select m.ConversationPartner).First();
+            User u = (from Message m in conn.Inbox where m.Author.UserId == TestMessagesFromId select m.Author).First();
 
             Conversation convo = conn.GetConversationWith(u);
 
@@ -68,7 +68,7 @@ namespace SparklrTests
             Connection conn = await Credentials.CreateSession();
             await conn.RefreshInboxAsync();
 
-            User u = (from Message m in conn.Inbox where m.ConversationPartner.UserId == TestMessagesFromId select m.ConversationPartner).First();
+            User u = (from Message m in conn.Inbox where m.Author.UserId == TestMessagesFromId select m.Author).First();
 
             Conversation convo = await conn.GetConversationWithUserIdAsync(TestMessagesFromId);
 
@@ -92,7 +92,7 @@ namespace SparklrTests
             Connection conn = await Credentials.CreateSession();
             await conn.RefreshInboxAsync();
 
-            User u = (from Message m in conn.Inbox where m.ConversationPartner.UserId == TestMessagesFromId select m.ConversationPartner).First();
+            User u = (from Message m in conn.Inbox where m.Author.UserId == TestMessagesFromId select m.Author).First();
 
             Conversation convo = await conn.GetConversationWithUserIdAsync(int.MaxValue);
         }
@@ -103,7 +103,7 @@ namespace SparklrTests
             Connection conn = await Credentials.CreateSession();
             await conn.RefreshInboxAsync();
 
-            IEnumerable<Message> messages = conn.ConversationWith((from Message m in conn.Inbox where m.ConversationPartner.UserId == TestMessagesFromId select m.ConversationPartner).First());
+            IEnumerable<Message> messages = conn.ConversationWith((from Message m in conn.Inbox where m.Author.UserId == TestMessagesFromId select m.Author).First());
 
             int number = 0;
 

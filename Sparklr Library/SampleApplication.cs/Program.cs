@@ -104,7 +104,7 @@ namespace SampleApplication.cs
                 int index = 0;
                 foreach (Message m in conn.Inbox)
                 {
-                    Console.WriteLine("{3}: Converstation with {0}(@{1}):\t{2}", m.ConversationPartner.Name, m.ConversationPartner.Handle, m.Content, index);
+                    Console.WriteLine("{3}: Converstation with {0}(@{1}):\t{2}", m.Author.Name, m.Author.Handle, m.Content, index);
                     index++;
                 }
 
@@ -117,10 +117,10 @@ namespace SampleApplication.cs
 
                 if (selected < index && selected >= 0)
                 {
-                    Console.WriteLine("Retreiving conversation with {0}.", conn.Inbox[selected].ConversationPartner.Name);
+                    Console.WriteLine("Retreiving conversation with {0}.", conn.Inbox[selected].Author.Name);
 
                     //We retreive the appropriate connection.
-                    Conversation conversation = conn.GetConversationWith(conn.Inbox[selected].ConversationPartner);
+                    Conversation conversation = conn.GetConversationWith(conn.Inbox[selected].Author);
 
                     Console.WriteLine("Loading messages...");
 
@@ -141,7 +141,7 @@ namespace SampleApplication.cs
                     //Now we can iterate over all retreived messages and print them to the console.
                     foreach (Message m in conversation.Messages)
                     {
-                        Console.WriteLine("{0}:\t{1}", m.ConversationPartner.Name.PadRight(16, ' '), m.Content);
+                        Console.WriteLine("{0}:\t{1}", m.Author.Name.PadRight(16, ' '), m.Content);
                     }
                     suppressOutput = false;
 

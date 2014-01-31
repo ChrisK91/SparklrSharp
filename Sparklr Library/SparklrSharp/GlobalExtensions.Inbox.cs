@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SparklrSharp
 {
+    /// <summary>
+    /// Contains Extensions that are globally available
+    /// </summary>
     public static partial class GlobalExtensions
     {
         /// <summary>

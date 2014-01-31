@@ -9,6 +9,11 @@ namespace SparklrSharp
 {
     public static partial class GlobalExtensions
     {
+        /// <summary>
+        /// Retreives the notifications on the given connection
+        /// </summary>
+        /// <param name="conn">The connection on which to run the query</param>
+        /// <returns>An array containing all notifications or an empty array if no notifications are present.</returns>
         public static async Task<Notification[]> GetNotificationsAsync(this Connection conn)
         {
             return await conn.GetNotificationsAsync();

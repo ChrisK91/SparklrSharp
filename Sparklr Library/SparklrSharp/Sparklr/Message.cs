@@ -11,15 +11,26 @@ namespace SparklrSharp.Sparklr
     /// </summary>
     public class Message
     {
+        /// <summary>
+        /// The content of the message
+        /// </summary>
         public string Content { get; private set; }
+
+        /// <summary>
+        /// The timestamp, when the message was sent.
+        /// </summary>
         public long Timestamp { get; private set; }
-        public User ConversationPartner { get; private set; }
+
+        /// <summary>
+        /// The author of the message.
+        /// </summary>
+        public User Author { get; private set; }
 
         private Message(string content, long timestamp, User conversationPartner)
         {
             Content = content;
             Timestamp = timestamp;
-            ConversationPartner = conversationPartner;
+            Author = conversationPartner;
         }
 
         /// <summary>

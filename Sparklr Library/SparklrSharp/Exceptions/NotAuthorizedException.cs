@@ -10,11 +10,18 @@ namespace SparklrSharp.Exceptions
     /// </summary>
     public class NotAuthorizedException : Exception
     {
+        /// <summary>
+        /// Creates a new instance
+        /// </summary>
         public NotAuthorizedException()
         {
         
         }
 
+        /// <summary>
+        /// Creates a new instance
+        /// </summary>
+        /// <param name="message">A message containing details</param>
         public NotAuthorizedException(string message) : base(message)
         {
         }
