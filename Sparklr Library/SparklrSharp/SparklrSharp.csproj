@@ -36,19 +36,23 @@
     <Compile Include="Connection.Authentication.cs" />
     <Compile Include="Connection.Messages.cs" />
     <Compile Include="Connection.General.cs" />
+    <Compile Include="Connection.Notifications.cs" />
     <Compile Include="Connection.Users.cs" />
     <Compile Include="Exceptions\InvalidResponseException.cs" />
     <Compile Include="Exceptions\NoDataFoundException.cs" />
     <Compile Include="Extensions\SparklrResponseValidation.cs" />
     <Compile Include="GlobalExtensions.Inbox.cs" />
     <Compile Include="JSONRepresentations\Message.cs" />
+    <Compile Include="JSONRepresentations\Notification.cs" />
     <Compile Include="JSONRepresentations\User.cs" />
     <Compile Include="GlobalExtensions.Conversations.cs" />
+    <Compile Include="GlobalExtensions.Notifications.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Communications\SparklrResponse.cs" />
     <Compile Include="Communications\WebClient.cs" />
     <Compile Include="Sparklr\Conversation.cs" />
     <Compile Include="Sparklr\Message.cs" />
+    <Compile Include="Sparklr\Notification.cs" />
     <Compile Include="Sparklr\User.cs" />
   </ItemGroup>
   <ItemGroup>

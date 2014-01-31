@@ -81,6 +81,13 @@ namespace SampleApplication.cs
 
                 Console.WriteLine("Signed in");
 
+                //Get the number of notifications
+                Notification[] notifications = await conn.GetNotificationsAsync();
+                Console.WriteLine("You have {0} notifications:", notifications.Length);
+
+                foreach (Notification n in notifications)
+                    Console.WriteLine("\t{0}", n.NotificationText);
+
                 /*
                  * Now we can get a list of all messages for example.
                  * The Inbox is associated with the connection to allow

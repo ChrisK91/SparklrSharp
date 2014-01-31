@@ -65,6 +65,7 @@
     <Compile Include="TestConversations.cs" />
     <Compile Include="TestInbox.cs" />
     <Compile Include="TestMisc.cs" />
+    <Compile Include="TestNotifications.cs" />
     <Compile Include="TestUsers.cs" />
   </ItemGroup>
   <ItemGroup>
