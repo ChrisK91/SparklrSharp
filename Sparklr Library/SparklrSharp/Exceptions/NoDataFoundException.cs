@@ -10,5 +10,13 @@ namespace SparklrSharp.Exceptions
     /// </summary>
     public class NoDataFoundException : Exception
     {
+        internal NoDataFoundException() : base()
+        {
+
+        }
+
+        internal NoDataFoundException(string message)
+            : base(message)
+        { }
     }
 }

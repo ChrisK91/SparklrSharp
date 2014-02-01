@@ -113,6 +113,9 @@ namespace SparklrSharp.Communications
         /// <returns>A SparklrResponse with the correct status code and content</returns>
         private SparklrResponse<string> CreateResponse(HttpWebResponse response)
         {
+            if (response == null)
+                throw new Exceptions.NoDataFoundException("Could not connect to Sparklr");
+
             if (response.StatusCode == HttpStatusCode.Forbidden)
                 throw new Exceptions.NotAuthorizedException();
 
