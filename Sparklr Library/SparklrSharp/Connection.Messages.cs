@@ -50,6 +50,21 @@ namespace SparklrSharp
         }
 
         /// <summary>
+        /// Retreives a conversation asynchronously
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="starttime"></param>
+        /// <returns></returns>
+        internal async Task<Message[]> GetConversationSinceAsync(int userId, long since)
+        {
+            SparklrResponse<JSONRepresentations.Get.Message[]> response = await webClient.GetJSONResponseAsync<JSONRepresentations.Get.Message[]>("chat", userId + "?since=" + since);
+
+            Sparklr.Message[] messages = await parseJSONMessages(response);
+
+            return messages;
+        }
+
+        /// <summary>
         /// Extracts message information from a JSON object and turns them into a Sparklr.Message
         /// </summary>
         /// <param name="response"></param>

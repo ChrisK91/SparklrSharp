@@ -73,9 +73,20 @@ namespace SparklrSharp.Sparklr
         /// <returns>true if more messages are available, otherwise false</returns>
         public async Task<bool> LoadMore()
         {
-            Message[] messages = oldestTimestamp >= 0 ? await conn.GetConversationAsync(ConversationPartner.UserId, oldestTimestamp) : await conn.GetConversationAsync(ConversationPartner.UserId);
+            List<Message> messages = new List<Message>(
+                    oldestTimestamp >= 0 ? await conn.GetConversationAsync(ConversationPartner.UserId, oldestTimestamp) : await conn.GetConversationAsync(ConversationPartner.UserId)
+                );
 
-            if (messages.Length == 0)
+            if (newestTimestamp >= 0)
+            {
+                List<Message> newerMessages = new List<Message>(
+                    await conn.GetConversationSinceAsync(ConversationPartner.UserId, newestTimestamp)
+                );
+
+                messages.AddRange(newerMessages);
+            }
+
+            if (messages.Count == 0)
             {
                 NeedsRefresh = false;
                 return false;
