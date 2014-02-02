@@ -58,10 +58,12 @@
     <Compile Include="Communications\SparklrResponse.cs" />
     <Compile Include="Communications\WebClient.cs" />
     <Compile Include="Sparklr\Conversation.cs" />
+    <Compile Include="Sparklr\UserIdIdentifiedEventArgs.cs" />
     <Compile Include="Sparklr\Message.cs" />
     <Compile Include="Sparklr\Notification.cs" />
     <Compile Include="Sparklr\Post.cs" />
     <Compile Include="Sparklr\User.cs" />
+    <Compile Include="Sparklr\UserIdentifiedEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Threading.Tasks">

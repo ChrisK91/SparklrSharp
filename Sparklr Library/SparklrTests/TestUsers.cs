@@ -28,6 +28,7 @@ namespace SparklrTests
         public async Task TestValidUser()
         {
             Connection conn = await Credentials.CreateSession();
+
             User u = await conn.GetUserAsync(testUserId);
 
             Assert.AreEqual(u.AvatarId, testAvatarId);

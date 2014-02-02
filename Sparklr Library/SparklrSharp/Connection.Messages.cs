@@ -53,7 +53,7 @@ namespace SparklrSharp
         /// Retreives a conversation asynchronously
         /// </summary>
         /// <param name="userId"></param>
-        /// <param name="starttime"></param>
+        /// <param name="since"></param>
         /// <returns></returns>
         internal async Task<Message[]> GetConversationSinceAsync(int userId, long since)
         {

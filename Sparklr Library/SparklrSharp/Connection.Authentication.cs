@@ -20,16 +20,27 @@ namespace SparklrSharp
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns>true if successful, otherwise false</returns>
+        [Obsolete("Future version will rely on OAuth")]
         public async Task<bool> SigninAsync(string username, string password)
         {
             try
             {
                 SparklrResponse<string> response = await webClient.GetRawResponseAsync("signin", username, password);
 
-                return response.IsOkAndTrue();
+                if (response.IsOkAndTrue())
+                {
+                    Authenticated = true;
+                    return true;
+                }
+                else
+                {
+                    Authenticated = false;
+                    return false;
+                }
             }
             catch (NotAuthorizedException)
             {
+                Authenticated = false;
                 return false;
             }
         }
@@ -40,7 +51,10 @@ namespace SparklrSharp
         /// <returns>Always true</returns>
         public async Task<bool> SignoffAsync()
         {
-            //will always return true or 403. 403 will throw an exception
+            CurrentUser = null;
+            Authenticated = false;
+
+            //will always return true. Everything else will throw an exception
             return (await webClient.GetRawResponseAsync("signoff")).IsOkAndTrue();
         }
     }

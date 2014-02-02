@@ -24,11 +24,6 @@ namespace SparklrSharp.Sparklr
             }
         }
 
-        private Conversation()
-        {
-            throw new NotImplementedException();
-        }
-
         internal Conversation(User conversationPartner, Connection conn)
         {
             this.conn = conn;

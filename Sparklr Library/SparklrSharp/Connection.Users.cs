@@ -13,7 +13,7 @@ namespace SparklrSharp
     {
         /// <summary>
         /// Retreives the user from the sparklr service. Throws a NoDataFoundException if the specified user is invalid.
-        /// Use User.CreateUserAsync to use user caching.
+        /// Retreived Users are cached.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

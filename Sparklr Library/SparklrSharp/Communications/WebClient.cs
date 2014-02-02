@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SparklrSharp.Exceptions;
+using SparklrSharp.Sparklr;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,8 @@ namespace SparklrSharp.Communications
     /// </summary>
     internal class WebClient
     {
+        internal event EventHandler<UserIdIdentifiedEventArgs> CurrentUserIdReceived;
+
         /// <summary>
         /// The location of the api
         /// </summary>
@@ -139,15 +142,19 @@ namespace SparklrSharp.Communications
                         string name = data[i];
                         string value = data[i + 1];
 
-                        if (name == "D" && !String.IsNullOrEmpty(value))
-                        {
-                            X = value.Split(',')[1];
-                        }
-
                         if (cookies.ContainsKey(name))
                             cookies.Remove(name);
 
                         cookies.Add(name, value);
+
+                        if (name == "D" && !String.IsNullOrEmpty(value))
+                        {
+                            X = value.Split(',')[1];
+
+                            //This will cause other requests to run, every info that is needed to authenticate should be set until now!
+                            if(CurrentUserIdReceived != null)
+                                CurrentUserIdReceived(this, new UserIdIdentifiedEventArgs(Convert.ToInt32(value.Split(',')[0])));
+                        }
                     }
                 }
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using SparklrSharp.Sparklr;
 
 namespace SparklrSharp
 {
@@ -17,11 +18,41 @@ namespace SparklrSharp
         private Communications.WebClient webClient;
 
         /// <summary>
+        /// The currently authenticated user
+        /// </summary>
+        public User CurrentUser { get; private set; }
+
+        /// <summary>
+        /// Contains if the connection is authenticated TODO: not reliable when errors are thrown.
+        /// </summary>
+        internal bool Authenticated { get; private set; }
+
+        /// <summary>
+        /// Occurs when the current user was identified.
+        /// </summary>
+        public event EventHandler<UserIdentifiedEventArgs> CurrentUserIdentified;
+
+        /// <summary>
         /// Creates a new instance of Connection
         /// </summary>
         public Connection()
         {
             webClient = new Communications.WebClient();
+
+            webClient.CurrentUserIdReceived += webClient_CurrentUserIdReceived;
+        }
+
+        private async void webClient_CurrentUserIdReceived(object sender, UserIdIdentifiedEventArgs e)
+        {
+            User cu = await this.GetUserAsync(e.IdentifiedUserId);
+
+            if (Authenticated)
+            {
+                CurrentUser = cu;
+
+                if (CurrentUserIdentified != null)
+                    CurrentUserIdentified(this, new UserIdentifiedEventArgs(this.CurrentUser));
+            }
         }
 
         /// <summary>
