@@ -16,14 +16,13 @@ namespace SparklrSharp.Communications
     internal class WebClient
     {
         /// <summary>
-        /// Stores the cookies across multiple requests
-        /// </summary>
-        private CookieContainer cookies = new CookieContainer();
-
-        /// <summary>
         /// The location of the api
         /// </summary>
+#if DEBUG
+        private const string baseUrl = "http://sparklr.me/api/";
+#else
         private const string baseUrl = "https://sparklr.me/api/";
+#endif
 
         /// <summary>
         /// The base uri - used to identify cookies
@@ -32,6 +31,8 @@ namespace SparklrSharp.Communications
 
         //TODO: switch to OAuth when ready
         private string X = null;
+
+        private Dictionary<string, string> cookies = new Dictionary<string,string>();
 
         /// <summary>
         /// Performs a GET-Request on the given location.
@@ -138,12 +139,15 @@ namespace SparklrSharp.Communications
                         string name = data[i];
                         string value = data[i + 1];
 
-                        cookies.Add(baseUri, new Cookie(name, Uri.EscapeDataString(value)));
-
                         if (name == "D" && !String.IsNullOrEmpty(value))
                         {
                             X = value.Split(',')[1];
                         }
+
+                        if (cookies.ContainsKey(name))
+                            cookies.Remove(name);
+
+                        cookies.Add(name, value);
                     }
                 }
 
@@ -182,11 +186,21 @@ namespace SparklrSharp.Communications
         private HttpWebRequest prepareRequest(string url)
         {
             HttpWebRequest request = WebRequest.CreateHttp(url);
-            request.CookieContainer = cookies;
+
+            if (cookies.Count > 0)
+                request.Headers["Cookie"] = String.Join(";", buildCookies());
 
             if (X != null)
                 request.Headers["X-X"] = X;
             return request;
+        }
+
+        private IEnumerable<string> buildCookies()
+        {
+            foreach (KeyValuePair<string, string> kvp in cookies)
+            {
+                yield return String.Format("{0}={1}", kvp.Key, kvp.Value);
+            }
         }
     }
 }
