@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,7 +10,7 @@ namespace SparklrSharp.Sparklr
     /// <summary>
     /// Provides a representation of messages on the Sparklr service.
     /// </summary>
-    public class Message
+    public class Message : IComparable<Message>
     {
         /// <summary>
         /// The content of the message
@@ -45,6 +46,16 @@ namespace SparklrSharp.Sparklr
         {
             User conversationPartner = await User.InstanciateUserAsync(userid, conn);
             return new Message(content, timestamp, conversationPartner);
+        }
+
+        /// <summary>
+        /// Compares the given message to the
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public int CompareTo(Message item)
+        {
+            return this.Timestamp.CompareTo(item.Timestamp);
         }
     }
 }

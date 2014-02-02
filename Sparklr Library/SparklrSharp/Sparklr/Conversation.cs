@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using SparklrSharp.Collections;
 
 namespace SparklrSharp.Sparklr
 {
@@ -39,7 +40,7 @@ namespace SparklrSharp.Sparklr
         /// Contains all messages of the conversation
         /// </summary>
         /// TODO: make ordered by timestamp
-        private List<Message> messageBuffer = new List<Message>();
+        private SortedList<Message> messageBuffer = new SortedList<Message>();
 
         /// <summary>
         /// The timestamp of the oldest message that was loaded
