@@ -1,4 +1,5 @@
 ﻿using SparklrSharp.Communications;
+using SparklrSharp.Sparklr;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,15 @@ namespace SparklrSharp
             {
                 throw new Exceptions.NoDataFoundException();
             }
+        }
+
+        //TODO: Will dismiss similar notifications (i.e. notifications for the same conversation) as well.
+        //TODO: Set Dismissed-Flag properly
+        internal async Task<bool> DismissNotificationAsync(Notification n)
+        {
+            SparklrResponse<JSONRepresentations.Get.MysqlResult> response = await webClient.GetJSONResponseAsync<JSONRepresentations.Get.MysqlResult>("dismiss", n.Id);
+
+            return (response.Code == System.Net.HttpStatusCode.OK) && (response.Response.affectedRows >= 1);
         }
     }
 }

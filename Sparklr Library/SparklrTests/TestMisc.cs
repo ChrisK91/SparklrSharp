@@ -2,6 +2,7 @@
 using SparklrSharp;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Threading.Tasks;
+using SparklrSharp.Sparklr;
 
 namespace SparklrTests
 {
@@ -16,6 +17,15 @@ namespace SparklrTests
             bool result = await conn.GetAwakeAsync();
 
             Assert.IsTrue(result);
+        }
+
+        [TestMethod]
+        public async Task TestGetStaff()
+        {
+            Connection conn = await Credentials.CreateSession();
+            User[] staff = await conn.GetStaffAsync();
+
+            Assert.AreEqual(staff.Length, 5);
         }
     }
 }

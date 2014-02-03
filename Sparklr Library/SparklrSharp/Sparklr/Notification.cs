@@ -66,6 +66,11 @@ namespace SparklrSharp.Sparklr
         public string Action { get; private set; }
 
         /// <summary>
+        /// Indicates if this notification has been dismissed.
+        /// </summary>
+        public bool Dismissed { get; private set; }
+
+        /// <summary>
         /// A verbose text representing this notification.
         /// Examples:   - "USER likes your post."
         ///             - "USER commented COMMENT"
@@ -111,10 +116,15 @@ namespace SparklrSharp.Sparklr
         /// <summary>
         /// Marks the notification as read and dismisses it.
         /// </summary>
-        /// <returns></returns>
-        public async Task<bool> Dismiss()
+        /// TODO: Write UnitTests
+        public async Task DismissAsync(Connection conn)
         {
-            throw new NotImplementedException();
+            if (Dismissed)
+                throw new InvalidOperationException("The notification has already been dismissed");
+
+            await conn.DismissNotificationAsync(this);
+
+            Dismissed = true;
         }
     }
 }

@@ -65,5 +65,23 @@ namespace SparklrSharp
 
             return response.IsOkAndTrue();
         }
+
+        /// <summary>
+        /// Retreives the staff members from sparklr
+        /// </summary>
+        /// <returns>An Array of Staff members</returns>
+        public async Task<User[]> GetStaffAsync()
+        {
+            SparklrResponse<SparklrSharp.JSONRepresentations.Get.UserMinimal[]> response = await webClient.GetJSONResponseAsync<SparklrSharp.JSONRepresentations.Get.UserMinimal[]>("staff");
+
+            User[] staffMembers = new User[response.Response.Length];
+
+            for (int i = 0; i < response.Response.Length; i++)
+            {
+                staffMembers[i] = await User.InstanciateUserAsync(response.Response[i].id, this);
+            }
+
+            return staffMembers;
+        }
     }
 }

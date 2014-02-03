@@ -48,11 +48,13 @@
     <Compile Include="GlobalExtensions.Inbox.cs" />
     <Compile Include="JSONRepresentations\Get\Comment.cs" />
     <Compile Include="JSONRepresentations\Get\Message.cs" />
+    <Compile Include="JSONRepresentations\Get\MysqlResult.cs" />
     <Compile Include="JSONRepresentations\Get\Notification.cs" />
     <Compile Include="JSONRepresentations\Get\TimelinePost.cs" />
     <Compile Include="JSONRepresentations\Get\User.cs" />
     <Compile Include="GlobalExtensions.Conversations.cs" />
     <Compile Include="GlobalExtensions.Notifications.cs" />
+    <Compile Include="JSONRepresentations\Get\UserMinimal.cs" />
     <Compile Include="JSONRepresentations\Post\Message.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Communications\SparklrResponse.cs" />
