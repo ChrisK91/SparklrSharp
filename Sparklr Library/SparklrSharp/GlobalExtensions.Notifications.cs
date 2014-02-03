@@ -18,5 +18,16 @@ namespace SparklrSharp
         {
             return await conn.GetNotificationsAsync();
         }
+
+        /// <summary>
+        /// Dismisses the given notification on the given connection
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        public static async Task DismissNotificationAsync(this Connection conn, Notification n)
+        {
+            await n.DismissAsync(conn);
+        }
     }
 }

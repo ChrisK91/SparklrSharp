@@ -43,6 +43,6 @@ namespace SparklrSharp.JSONRepresentations.Get
         /// <summary>
         /// Recent posts by this user
         /// </summary>
-        public List<TimelinePost> timeline { get; set; }
+        public List<Post> timeline { get; set; }
     }
 }

@@ -1,14 +1,17 @@
-﻿using System;
+﻿using SparklrSharp.Collections;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace SparklrSharp.Sparklr
 {
     /// <summary>
     /// Represents a post on the Sparklr service
     /// </summary>
-    public class Post
+    public class Post : IComparable<Post>
     {
         private static Dictionary<int, Post> postCache = new Dictionary<int,Post>();
 
@@ -53,10 +56,9 @@ namespace SparklrSharp.Sparklr
         public string Content { get; private set; }
 
         /// <summary>
-        /// The original id of a reposted post.
+        /// The original post of a reposted post.
         /// </summary>
-        [Obsolete("OriginalId will be replaced with an actual Post member")]
-        public int OriginalId { get; private set; }
+        public Post OriginalPost { get; private set; }
 
         /// <summary>
         /// The original author of a reposted post
@@ -73,15 +75,35 @@ namespace SparklrSharp.Sparklr
         /// </summary>
         public long ModifiedTimestamp { get; private set; }
 
-        internal static Post InstanciatePost(int id, User author, string network, int type, string meta, long timestamp, bool isPublic, string content, int originalId, User viaUser, int commentCount, long modifiedTimestamp)
+        /// <summary>
+        /// Contains the comments
+        /// </summary>
+        private SortedList<Comment> comments;
+
+        /// <summary>
+        /// Retreives a post on the given connection. Uses caching.
+        /// </summary>
+        /// <param name="id">The identifier of the post</param>
+        /// <param name="conn">The connection on which to run the query</param>
+        /// <returns></returns>
+        public static async Task<Post> GetPostByIdAsync(int id, Connection conn)
+        {
+            if (postCache.ContainsKey(id))
+                return postCache[id];
+
+            Post p = await conn.GetPostByIdAsync(id);
+            return p;
+        }
+
+        internal static Post InstanciatePost(int id, User author, string network, int type, string meta, long timestamp, bool isPublic, string content, Post originalPost, User viaUser, int commentCount, long modifiedTimestamp)
         {
             if (!postCache.ContainsKey(id))
-                postCache.Add(id, new Post(id, author, network, type, meta, timestamp, isPublic, content, originalId, viaUser, commentCount, modifiedTimestamp));
+                postCache.Add(id, new Post(id, author, network, type, meta, timestamp, isPublic, content, originalPost, viaUser, commentCount, modifiedTimestamp));
             
             return postCache[id];
         }
 
-        private Post(int id, User author, string network, int type, string meta, long timestamp, bool isPublic, string content, int originalId, User viaUser, int commentCount, long modifiedTimestamp)
+        private Post(int id, User author, string network, int type, string meta, long timestamp, bool isPublic, string content, Post originalPost, User viaUser, int commentCount, long modifiedTimestamp)
         {
             this.Id = id;
             this.Author = author;
@@ -91,7 +113,7 @@ namespace SparklrSharp.Sparklr
             this.Timestamp = timestamp;
             this.IsPublic = IsPublic;
             this.Content = content;
-            this.OriginalId = originalId;
+            this.OriginalPost = originalPost;
             this.ViaUser = viaUser;
             this.CommentCount = commentCount;
             this.ModifiedTimestamp = modifiedTimestamp;
@@ -114,6 +136,35 @@ namespace SparklrSharp.Sparklr
         public bool Comment(string comment)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Compares the items
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public int CompareTo(Post item)
+        {
+            return this.Timestamp.CompareTo(item.Timestamp);
+        }
+
+        /// <summary>
+        /// Retreives the comments, or returns the comments if they are already retreived
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ReadOnlyCollection<Comment>> GetCommentsAsync(Connection conn)
+        {
+            if (comments != null)
+                return new ReadOnlyCollection<Comment>(comments);
+
+            comments = new SortedList<Comment>();
+
+            Comment[] comms = await conn.GetCommentsForPostAsync(this.Id);
+
+            foreach (Comment c in comms)
+                comments.Add(c);
+
+            return new ReadOnlyCollection<Comment>(comments);
         }
     }
 }
