@@ -59,6 +59,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Benchmarking.cs" />
     <Compile Include="Credentials.cs" />
     <Compile Include="TestAuthentication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

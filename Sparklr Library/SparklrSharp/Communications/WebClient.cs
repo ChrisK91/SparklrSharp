@@ -18,6 +18,13 @@ namespace SparklrSharp.Communications
     {
         internal event EventHandler<UserIdIdentifiedEventArgs> CurrentUserIdReceived;
 
+#if DEBUG
+        /// <summary>
+        /// Contains the number of requests sent
+        /// </summary>
+        internal static int DEBUG_NumberOfRequestReceived = 0;
+#endif
+
         /// <summary>
         /// The location of the api
         /// </summary>
@@ -117,6 +124,10 @@ namespace SparklrSharp.Communications
         /// <returns>A SparklrResponse with the correct status code and content</returns>
         private SparklrResponse<string> CreateResponse(HttpWebResponse response)
         {
+#if DEBUG
+            DEBUG_NumberOfRequestReceived++;
+#endif
+
             if (response == null)
                 throw new Exceptions.NoDataFoundException("Could not connect to Sparklr");
 
