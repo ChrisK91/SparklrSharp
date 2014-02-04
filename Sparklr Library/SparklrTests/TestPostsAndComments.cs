@@ -16,7 +16,7 @@ namespace SparklrTests
         public async Task TestRegularPostAndCommentRetreival()
         {
             Connection conn = await Credentials.CreateSession();
-
+            
             Post p = await conn.GetPostByIdAsync(151568);
 
             Assert.AreEqual(p.Author.UserId, 591);

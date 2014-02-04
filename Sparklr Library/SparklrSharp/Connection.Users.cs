@@ -36,20 +36,7 @@ namespace SparklrSharp
                     foreach (JSONRepresentations.Get.Post p in result.Response.timeline)
                     {
                         u.timeline.Add(
-                                Post.InstanciatePost(
-                                    p.id,
-                                    await User.InstanciateUserAsync(p.from, this),
-                                    p.network,
-                                    p.type,
-                                    p.meta,
-                                    p.time,
-                                    p.@public != null ? p.@public == 1 : false,
-                                    p.message,
-                                    p.origid != null ? (await Post.GetPostByIdAsync((int)p.origid, this)) : null,
-                                    p.via != null ? await User.InstanciateUserAsync((int)p.via, this) : null,
-                                    p.commentcount ?? 0,
-                                    p.modified ?? -1
-                                )
+                                await Post.InstanciatePostAsync(p, this)
                             );
                     }
 

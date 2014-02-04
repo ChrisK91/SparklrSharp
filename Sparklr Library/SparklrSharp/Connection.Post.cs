@@ -19,20 +19,7 @@ namespace SparklrSharp
         {
             SparklrResponse<JSONRepresentations.Get.Post> response = await webClient.GetJSONResponseAsync<JSONRepresentations.Get.Post>("post", id);
 
-            Post p = Post.InstanciatePost(
-                        response.Response.id,
-                        await User.InstanciateUserAsync(response.Response.from, this),
-                        response.Response.network,
-                        response.Response.type,
-                        response.Response.meta,
-                        response.Response.time,
-                        response.Response.@public != null ? response.Response.@public == 1 : false,
-                        response.Response.message,
-                        response.Response.origid != null ? (await Post.GetPostByIdAsync((int)response.Response.origid, this)) : null,
-                        response.Response.via != null ? await User.InstanciateUserAsync((int)response.Response.via, this) : null,
-                        response.Response.commentcount ?? 0,
-                        response.Response.modified ?? -1
-                    );
+            Post p = await Post.InstanciatePostAsync(response.Response, this);
 
             return p;
         }

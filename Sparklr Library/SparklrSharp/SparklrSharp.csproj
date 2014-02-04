@@ -42,6 +42,7 @@
     <Compile Include="Connection.General.cs" />
     <Compile Include="Connection.Notifications.cs" />
     <Compile Include="Connection.Post.cs" />
+    <Compile Include="Connection.Stream.cs" />
     <Compile Include="Connection.Users.cs" />
     <Compile Include="Exceptions\InvalidResponseException.cs" />
     <Compile Include="Exceptions\NoDataFoundException.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Communications\WebClient.cs" />
     <Compile Include="Sparklr\Comment.cs" />
     <Compile Include="Sparklr\Conversation.cs" />
+    <Compile Include="Sparklr\Stream.cs" />
     <Compile Include="Sparklr\UserIdIdentifiedEventArgs.cs" />
     <Compile Include="Sparklr\Message.cs" />
     <Compile Include="Sparklr\Notification.cs" />

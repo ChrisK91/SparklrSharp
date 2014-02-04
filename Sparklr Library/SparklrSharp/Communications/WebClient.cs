@@ -134,7 +134,7 @@ namespace SparklrSharp.Communications
             if (response.StatusCode == HttpStatusCode.Forbidden)
                 throw new Exceptions.NotAuthorizedException();
 
-            using (Stream stream = response.GetResponseStream())
+            using (System.IO.Stream stream = response.GetResponseStream())
             {
                 StreamReader reader = new StreamReader(stream, Encoding.UTF8);
                 String responseString = reader.ReadToEnd();

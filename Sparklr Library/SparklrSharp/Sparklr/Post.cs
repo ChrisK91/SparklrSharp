@@ -103,6 +103,22 @@ namespace SparklrSharp.Sparklr
             return postCache[id];
         }
 
+        internal async static Task<Post> InstanciatePostAsync(JSONRepresentations.Get.Post p, Connection conn)
+        {
+            return InstanciatePost(p.id,
+                            await User.InstanciateUserAsync(p.from, conn),
+                            p.network,
+                            p.type,
+                            p.meta,
+                            p.time,
+                            p.@public != null ? p.@public == 1 : false,
+                            p.message,
+                            p.origid != null ? (await Post.GetPostByIdAsync((int)p.origid, conn)) : null,
+                            p.via != null ? await User.InstanciateUserAsync((int)p.via, conn) : null,
+                            p.commentcount ?? 0,
+                            p.modified ?? -1);
+        }
+
         private Post(int id, User author, string network, int type, string meta, long timestamp, bool isPublic, string content, Post originalPost, User viaUser, int commentCount, long modifiedTimestamp)
         {
             this.Id = id;
