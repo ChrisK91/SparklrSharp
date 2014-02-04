@@ -10,12 +10,6 @@ namespace SparklrSharp
 {
     public partial class Connection
     {
-        internal async Task<Post[]> GetStreamAsync(int userid)
-        {
-            SparklrResponse<JSONRepresentations.Get.Post[]> response = await webClient.GetJSONResponseAsync<JSONRepresentations.Get.Post[]>("stream", userid);
-            return await extractPostsAsync(response);
-        }
-
         internal async Task<Post[]> GetStreamAsync(string name)
         {
             SparklrResponse<JSONRepresentations.Get.Post[]> response = await webClient.GetJSONResponseAsync<JSONRepresentations.Get.Post[]>("stream", name);
