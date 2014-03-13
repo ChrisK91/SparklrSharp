@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace SparklrSharp.Sparklr
 {
+    //TODO: Create base class for refreshable message lists (stream, mentions, etc.)
+
     /// <summary>
     /// Represents a stream of messages. The stream can be either a network or all posts by a specified user.
     /// </summary>
@@ -71,5 +73,7 @@ namespace SparklrSharp.Sparklr
         {
             this.Name = name;
         }
+
+        //TODO: Support for refreshing
     }
 }

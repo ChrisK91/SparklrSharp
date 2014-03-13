@@ -44,10 +44,12 @@
     <Compile Include="Connection.Post.cs" />
     <Compile Include="Connection.Stream.cs" />
     <Compile Include="Connection.Users.cs" />
+    <Compile Include="Connection.Mentions.cs" />
     <Compile Include="Exceptions\InvalidResponseException.cs" />
     <Compile Include="Exceptions\NoDataFoundException.cs" />
     <Compile Include="Extensions\SparklrResponseValidation.cs" />
     <Compile Include="GlobalExtensions.Inbox.cs" />
+    <Compile Include="GlobalExtensions.Mentions.cs" />
     <Compile Include="GlobalExtensions.Post.cs" />
     <Compile Include="JSONRepresentations\Get\Comment.cs" />
     <Compile Include="JSONRepresentations\Get\Message.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="Communications\WebClient.cs" />
     <Compile Include="Sparklr\Comment.cs" />
     <Compile Include="Sparklr\Conversation.cs" />
+    <Compile Include="Sparklr\Mentions.cs" />
     <Compile Include="Sparklr\Stream.cs" />
     <Compile Include="Sparklr\UserIdIdentifiedEventArgs.cs" />
     <Compile Include="Sparklr\Message.cs" />
