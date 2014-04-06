@@ -55,14 +55,19 @@ namespace SparklrSharp.Communications
             string url = buildUrl(uri, parameters);
             HttpWebRequest request = prepareRequest(url);
 
+            WebException exception;
+
             try
             {
-                return CreateResponse((HttpWebResponse)(await request.GetResponseAsync()));
+                return await CreateResponseAsync((HttpWebResponse)(await request.GetResponseAsync()));
             }
             catch (WebException ex)
             {
-                 return CreateResponse((HttpWebResponse)(ex.Response));
+                exception = ex;
             }
+
+            //Will only happen when the request fails fails
+            return await CreateResponseAsync((HttpWebResponse)(exception.Response));
         }
 
         private static string buildUrl(string uri, object[] parameters)
@@ -85,14 +90,19 @@ namespace SparklrSharp.Communications
             request.Method = "POST";
             request.Headers["X-Data"] = xdata;
 
+            WebException exception;
+
             try
             {
-                return CreateResponse((HttpWebResponse)(await request.GetResponseAsync()));
+                return await CreateResponseAsync((HttpWebResponse)(await request.GetResponseAsync()));
             }
             catch (WebException ex)
             {
-                 return CreateResponse((HttpWebResponse)(ex.Response));
+                exception = ex;
             }
+
+            //The download has failed
+            return await CreateResponseAsync((HttpWebResponse)(exception.Response));
         }
 
         /// <summary>
@@ -122,7 +132,7 @@ namespace SparklrSharp.Communications
         /// </summary>
         /// <param name="response">The response</param>
         /// <returns>A SparklrResponse with the correct status code and content</returns>
-        private SparklrResponse<string> CreateResponse(HttpWebResponse response)
+        private async Task<SparklrResponse<string>> CreateResponseAsync(HttpWebResponse response)
         {
 #if DEBUG
             DEBUG_NumberOfRequestReceived++;
@@ -137,7 +147,7 @@ namespace SparklrSharp.Communications
             using (System.IO.Stream stream = response.GetResponseStream())
             {
                 StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                String responseString = reader.ReadToEnd();
+                String responseString = await reader.ReadToEndAsync();
                 HttpStatusCode statusCode = response.StatusCode;
 
                 if (response.Headers.AllKeys.Contains("Set-Cookie"))

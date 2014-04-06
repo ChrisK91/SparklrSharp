@@ -25,7 +25,7 @@ namespace SparklrTests
             Connection conn = await Credentials.CreateSession();
             User[] staff = await conn.GetStaffAsync();
 
-            Assert.AreEqual(staff.Length, 5);
+            Assert.AreEqual(staff.Length, 6);
         }
     }
 }
