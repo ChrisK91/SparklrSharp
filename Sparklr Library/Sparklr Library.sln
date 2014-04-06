@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30324.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparklrSharp", "SparklrSharp\SparklrSharp.csproj", "{A9122034-0867-4837-9228-5322024335BB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparklrTests", "SparklrTests\SparklrTests.csproj", "{C507B4F7-1DFB-4C06-BD81-8E21BB4A1196}"
