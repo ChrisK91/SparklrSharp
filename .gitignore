@@ -7,7 +7,7 @@
 *.sln.docstates
 
 #ignore credentials
-[Cc]redentials.cs
+#[Cc]redentials.cs
 
 # Build results
 
