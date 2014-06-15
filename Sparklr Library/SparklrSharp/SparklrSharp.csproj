@@ -65,6 +65,7 @@
     <Compile Include="Connection.Stream.cs" />
     <Compile Include="Connection.Users.cs" />
     <Compile Include="Connection.Mentions.cs" />
+    <Compile Include="Exceptions\ConnectionException.cs" />
     <Compile Include="Exceptions\InvalidResponseException.cs" />
     <Compile Include="Exceptions\NoDataFoundException.cs" />
     <Compile Include="Extensions\SparklrResponseValidation.cs" />

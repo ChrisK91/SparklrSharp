@@ -13,6 +13,11 @@ namespace SparklrSharp.Sparklr
     public class User
     {
         /// <summary>
+        /// Represents a user that has been deleted from the service
+        /// </summary>
+        public static readonly User DeletedUser = new User(-1, "deleted", "deleted", -1, false, "deleted");
+
+        /// <summary>
         /// The ID
         /// </summary>
         public int UserId { get; private set; }

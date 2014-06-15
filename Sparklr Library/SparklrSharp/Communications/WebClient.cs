@@ -64,10 +64,30 @@ namespace SparklrSharp.Communications
             catch (WebException ex)
             {
                 exception = ex;
+
+                if (connectivityError(ex.Status))
+                    throw new ConnectionException("Could not connect to sparklr", ex);
             }
 
             //Will only happen when the request fails fails
             return await CreateResponseAsync((HttpWebResponse)(exception.Response));
+        }
+
+
+        private bool connectivityError(WebExceptionStatus webExceptionStatus)
+        {
+            //Do some weird hacks, because the enumeration does not contain all values in a PCL
+
+            if (webExceptionStatus == WebExceptionStatus.ConnectFailure)
+                return true;
+
+            if (webExceptionStatus.ToString() == "ConnectionClosed")
+                return true;
+
+            if (webExceptionStatus.ToString() == "NameResolutionFailure")
+                return true;
+
+            return false;
         }
 
         private static string buildUrl(string uri, object[] parameters)
@@ -99,6 +119,9 @@ namespace SparklrSharp.Communications
             catch (WebException ex)
             {
                 exception = ex;
+
+                if (connectivityError(ex.Status))
+                    throw new ConnectionException("Could not connect to sparklr", ex);
             }
 
             //The download has failed
@@ -168,7 +191,7 @@ namespace SparklrSharp.Communications
 
                         cookies.Add(name, value);
 
-                        if (name == "D" && !String.IsNullOrEmpty(value))
+                        if (name == "D" && !String.IsNullOrEmpty(value) && value != "signoff")
                         {
                             X = value.Split(',')[1];
 

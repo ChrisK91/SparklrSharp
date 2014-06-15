@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace SparklrSharp.Sparklr
 {
+    /// <summary>
+    /// Represents a mention
+    /// </summary>
     public class Mentions
     {
         private static Dictionary<int, Mentions> streamCache = new Dictionary<int, Mentions>();
