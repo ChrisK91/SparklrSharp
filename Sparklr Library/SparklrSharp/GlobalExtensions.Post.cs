@@ -19,5 +19,17 @@ namespace SparklrSharp
         {
             return Post.GetPostByIdAsync(id, conn);
         }
+
+        /// <summary>
+        /// Can be used to submit a post to the sparklr service
+        /// </summary>
+        /// <param name="conn">The connection on which to perform the request</param>
+        /// <param name="message">The content of the post. Cannot exceed 500 characters.</param>
+        /// <param name="network">The network to post to. Defaults to "following".</param>
+        /// <returns>True if succesfull, otherwise false</returns>
+        public static Task<bool> SubmitPostAsync(this Connection conn, string message, string network = null)
+        {
+            return Post.SubmitPostAsync(message, network, conn);
+        }
     }
 }

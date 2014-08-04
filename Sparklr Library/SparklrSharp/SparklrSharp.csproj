@@ -84,6 +84,7 @@
     <Compile Include="JSONRepresentations\Post\Message.cs" />
     <Compile Include="Connection.Comment.cs" />
     <Compile Include="GlobalExtensions.Stream.cs" />
+    <Compile Include="JSONRepresentations\Post\Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Communications\SparklrResponse.cs" />
     <Compile Include="Communications\WebClient.cs" />

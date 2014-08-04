@@ -182,5 +182,35 @@ namespace SparklrSharp.Sparklr
 
             return new ReadOnlyCollection<Comment>(comments);
         }
+
+        /// <summary>
+        /// Submits a post to the sparklr.
+        /// </summary>
+        /// <param name="message">The content of the post</param>
+        /// <param name="conn">The connection on which the request is performed</param>
+        /// <returns>True if succesful, otherwise false</returns>
+        public static Task<bool> SubmitPostAsync(string message, Connection conn)
+        {
+            if (message.Length > 500)
+                throw new ArgumentException("The message exceeds 500 characters", message);
+
+            return conn.SendPostWithoutImageAsync(message, null);
+        }
+
+        /// <summary>
+        /// Submits a post to the sparklr.
+        /// </summary>
+        /// <param name="message">The content of the post</param>
+        /// <param name="network">The name of the network</param>
+        /// <param name="conn">The connection on which the request is performed</param>
+        /// <returns>True if succesful, otherwise false</returns>
+        public static Task<bool> SubmitPostAsync(string message, string network, Connection conn)
+        {
+            // TODO: add enum with common network names
+            if (message.Length > 500)
+                throw new ArgumentException("The message exceeds 500 characters", message);
+
+            return conn.SendPostWithoutImageAsync(message, network);
+        }
     }
 }
