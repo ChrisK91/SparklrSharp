@@ -35,9 +35,7 @@ namespace SparklrSharp
 
                     foreach (JSONRepresentations.Get.Post p in result.Response.timeline)
                     {
-                        u.timeline.Add(
-                                await Post.InstanciatePostAsync(p, this)
-                            );
+                        u.rawTimeline.Add(p);
                     }
 
                     return u;

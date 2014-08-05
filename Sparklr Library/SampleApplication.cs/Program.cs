@@ -184,6 +184,7 @@ namespace SampleApplication.cs
                     }
                 }
 
+
                 //Finally we sign out.
                 await conn.SignoffAsync();
                 Console.WriteLine("Signed out");

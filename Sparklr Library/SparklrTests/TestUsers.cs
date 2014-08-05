@@ -12,7 +12,7 @@ namespace SparklrTests
         private const int testUserId = 591;
         private const string testHandle = "ChrisK";
         private const long testAvatarId = 1390042494;
-        private const bool testFollowing = true;
+        private const bool testFollowing = false;
         private const string testName = "ChrisK";
         private const string testBio = "Can't really tell much about myself. I'm from Germany and currently going to university, studying medicine. If you have any questions, feel free to ask :)";
 
