@@ -39,8 +39,8 @@ namespace SparklrTests
 
             Post original = await conn.GetPostByIdAsync(151568);
 
-            Assert.IsNotNull(p.OriginalPost);
-            Assert.AreSame(original, p.OriginalPost);
+            Assert.IsNotNull(await p.GetOriginalPostAsync(conn));
+            Assert.AreSame(original, await p.GetOriginalPostAsync(conn));
         }
     }
 }

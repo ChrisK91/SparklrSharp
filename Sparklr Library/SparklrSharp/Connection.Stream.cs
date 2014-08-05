@@ -30,16 +30,17 @@ namespace SparklrSharp
 
         private async Task<Post[]> extractPostsAsync(SparklrResponse<JSONRepresentations.Get.Post[]> response)
         {
-            Post[] posts = new Post[response.Response.Length];
+            List<Post> posts = new List<Post>();
 
-            int i = 0;
             foreach (JSONRepresentations.Get.Post p in response.Response)
             {
-                posts[i] = await Post.InstanciatePostAsync(p, this);
-                i++;
+                Post po = await Post.InstanciatePostAsync(p, this);
+
+                if (p != null)
+                    posts.Add(po);
             }
 
-            return posts;
+            return posts.ToArray();
         }
     }
 }

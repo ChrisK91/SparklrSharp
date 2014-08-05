@@ -73,6 +73,7 @@ namespace SparklrSharp.Sparklr
         internal List<JSONRepresentations.Get.Post> rawTimeline { get; private set; }
 
         private static Dictionary<int, User> userCache = new Dictionary<int, User>();
+        private static HashSet<int> deletedUsers = new HashSet<int>();
 
         /// <summary>
         /// Handles the creation of instances. Only one instance of a user can exist at a time.
@@ -82,10 +83,22 @@ namespace SparklrSharp.Sparklr
         /// <returns></returns>
         public static async Task<User> InstanciateUserAsync(int userid, Connection conn)
         {
-            if (!userCache.ContainsKey(userid))
+            if(deletedUsers.Contains(userid))
             {
-                User u = await conn.GetUserAsync(userid);
-                //This will always add the User to the cache
+                return User.DeletedUser;
+            }
+            else if (!userCache.ContainsKey(userid))
+            {
+                try
+                {
+                    User u = await conn.GetUserAsync(userid);
+                    //This will always add the User to the cache, do not add user to cache here!
+                }
+                catch(Exceptions.NoDataFoundException)
+                {
+                    deletedUsers.Add(userid);
+                    return User.DeletedUser;
+                }
             }
 
             return userCache[userid];

@@ -13,7 +13,7 @@ namespace SparklrSharp.Sparklr
     /// </summary>
     public class Post : IComparable<Post>
     {
-        private static Dictionary<int, Post> postCache = new Dictionary<int,Post>();
+        private static Dictionary<int, Post> postCache = new Dictionary<int, Post>();
 
         /// <summary>
         /// The Post-ID
@@ -56,9 +56,11 @@ namespace SparklrSharp.Sparklr
         public string Content { get; private set; }
 
         /// <summary>
-        /// The original post of a reposted post.
+        /// Indicates if there is an original post
         /// </summary>
-        public Post OriginalPost { get; private set; }
+        public bool HasOriginalPost { get; private set; }
+        private int originalPostId;
+        private Post originalPost;
 
         /// <summary>
         /// The original author of a reposted post
@@ -95,16 +97,23 @@ namespace SparklrSharp.Sparklr
             return p;
         }
 
-        internal static Post InstanciatePost(int id, User author, string network, int type, string meta, long timestamp, bool isPublic, string content, Post originalPost, User viaUser, int commentCount, long modifiedTimestamp)
+        internal static Post InstanciatePost(int id, User author, string network, int type, string meta, long timestamp, bool isPublic, string content, int? originalPostId, User viaUser, int commentCount, long modifiedTimestamp)
         {
             if (!postCache.ContainsKey(id))
-                postCache.Add(id, new Post(id, author, network, type, meta, timestamp, isPublic, content, originalPost, viaUser, commentCount, modifiedTimestamp));
-            
+                postCache.Add(id, new Post(id, author, network, type, meta, timestamp, isPublic, content, originalPostId, viaUser, commentCount, modifiedTimestamp));
+
             return postCache[id];
         }
 
         internal async static Task<Post> InstanciatePostAsync(JSONRepresentations.Get.Post p, Connection conn)
         {
+            User originalAuthor = null;
+
+            if (p.via != null)
+            {
+                originalAuthor = await User.InstanciateUserAsync((int)p.via, conn);
+            }
+
             return InstanciatePost(p.id,
                             await User.InstanciateUserAsync(p.from, conn),
                             p.network,
@@ -113,13 +122,13 @@ namespace SparklrSharp.Sparklr
                             p.time,
                             p.@public != null ? p.@public == 1 : false,
                             p.message,
-                            p.origid != null ? (await Post.GetPostByIdAsync((int)p.origid, conn)) : null,
-                            p.via != null ? await User.InstanciateUserAsync((int)p.via, conn) : null,
+                            p.origid,
+                            p.via != null ? originalAuthor : null,
                             p.commentcount ?? 0,
                             p.modified ?? -1);
         }
 
-        private Post(int id, User author, string network, int type, string meta, long timestamp, bool isPublic, string content, Post originalPost, User viaUser, int commentCount, long modifiedTimestamp)
+        private Post(int id, User author, string network, int type, string meta, long timestamp, bool isPublic, string content, int? originalPostId, User viaUser, int commentCount, long modifiedTimestamp)
         {
             this.Id = id;
             this.Author = author;
@@ -129,7 +138,8 @@ namespace SparklrSharp.Sparklr
             this.Timestamp = timestamp;
             this.IsPublic = IsPublic;
             this.Content = content;
-            this.OriginalPost = originalPost;
+            this.HasOriginalPost = originalPostId != null;
+            this.originalPostId = originalPostId != null ? (int)originalPostId : 0;
             this.ViaUser = viaUser;
             this.CommentCount = commentCount;
             this.ModifiedTimestamp = modifiedTimestamp;
@@ -181,6 +191,26 @@ namespace SparklrSharp.Sparklr
                 comments.Add(c);
 
             return new ReadOnlyCollection<Comment>(comments);
+        }
+
+        /// <summary>
+        /// Retreives the original post of a repost
+        /// </summary>
+        /// <param name="conn">The connection on which to run the query</param>
+        /// <returns></returns>
+        public async Task<Post> GetOriginalPostAsync(Connection conn)
+        {
+            if (HasOriginalPost)
+            {
+                if (originalPost == null)
+                {
+                    originalPost = await GetPostByIdAsync(originalPostId, conn);
+                }
+
+                return originalPost;
+            }
+
+            return null;
         }
 
         /// <summary>
