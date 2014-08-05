@@ -171,7 +171,7 @@ namespace SparklrSharp.Sparklr
         /// <returns></returns>
         public int CompareTo(Post item)
         {
-            return this.Timestamp.CompareTo(item.Timestamp);
+            return this.Timestamp.CompareTo(item.Timestamp) * -1;
         }
 
         /// <summary>

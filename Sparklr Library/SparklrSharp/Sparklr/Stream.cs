@@ -19,6 +19,12 @@ namespace SparklrSharp.Sparklr
 
         private SortedList<Post> posts = new SortedList<Post>();
 
+        // older messages have smaller timestamps
+        private long oldestTimestamp = long.MaxValue;
+
+        // newer messages have greater timestamps
+        private long newestTimestamp = long.MinValue;
+
         /// <summary>
         /// The name of the stream
         /// </summary>
@@ -47,15 +53,42 @@ namespace SparklrSharp.Sparklr
             {
                 Stream s = new Stream(name);
 
-                Post[] initialPosts = await conn.GetStreamAsync(name);
-
-                foreach (Post p in initialPosts)
-                    s.posts.Add(p);
+                await s.loadInitialPosts(conn);
 
                 streamCache.Add(name, s);
             }
 
             return streamCache[name];
+        }
+
+        /// <summary>
+        /// Loads the initial 30 posts
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <returns></returns>
+        internal async Task loadInitialPosts(Connection conn)
+        {
+            Post[] initialPosts = await conn.GetStreamAsync(this.Name);
+
+            appendPosts(initialPosts);
+        }
+
+        /// <summary>
+        /// Adds the posts to the internal list
+        /// </summary>
+        /// <param name="posts"></param>
+        private void appendPosts(Post[] posts)
+        {
+            foreach (Post p in posts)
+            {
+                this.posts.Add(p);
+
+                if (p.ModifiedTimestamp < oldestTimestamp)
+                    oldestTimestamp = p.Timestamp;
+
+                if (p.ModifiedTimestamp > newestTimestamp)
+                    newestTimestamp = p.Timestamp;
+            }
         }
 
         /// <summary>
@@ -67,6 +100,28 @@ namespace SparklrSharp.Sparklr
         public static Task<Stream> InstanciateStreamAsync(User u, Connection conn)
         {
             return InstanciateStreamAsync(u.UserId.ToString(), conn);
+        }
+
+        /// <summary>
+        /// Attempts to load more posts.
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <returns></returns>
+        public async Task<bool> LoadOlderPosts(Connection conn)
+        {
+#if DEBUG
+            if (System.Diagnostics.Debugger.IsAttached)
+                System.Diagnostics.Debug.WriteLine("Loading posts starting from {0} for {1}", oldestTimestamp, Name);
+#endif
+            Post[] morePosts = await conn.GetStreamAsync(Name, oldestTimestamp);
+
+            if(morePosts.Length > 0)
+            {
+                appendPosts(morePosts);
+                return true;
+            }
+
+            return false;
         }
 
         private Stream(string name)
