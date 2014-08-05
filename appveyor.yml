@@ -1,10 +1,6 @@
-#---------------------------------#
-#      artifacts configuration    #
-#---------------------------------#
+test: off
 
 artifacts:
-
-  # pushing entire folder as a zip archive
   - path: Sparklr Library\SparklrSharp\bin\Debug
     name: DEBUG
   - path: Sparklr Library\SparklrSharp\bin\Release
