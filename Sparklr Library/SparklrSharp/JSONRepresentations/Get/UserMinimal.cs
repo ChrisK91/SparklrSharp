@@ -28,6 +28,6 @@ namespace SparklrSharp.JSONRepresentations.Get
         /// <summary>
         /// The avatarid
         /// </summary>
-        public long avatarid { get; set; }
+        public long? avatarid { get; set; }
     }
 }

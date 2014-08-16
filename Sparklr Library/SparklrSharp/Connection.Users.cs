@@ -78,7 +78,7 @@ namespace SparklrSharp
 
             foreach(SparklrSharp.JSONRepresentations.Get.UserMinimal u in result.Response)
             {
-                User user = User.InstanciateUser(u.id, u.username, u.displayname, u.avatarid);
+                User user = User.InstanciateUser(u.id, u.username, u.displayname, u.avatarid != null ? (long)u.avatarid : -1);
 
                 users.Add(u.id, user);
             }
