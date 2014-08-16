@@ -42,12 +42,55 @@ namespace SparklrSharp.Sparklr
         /// <summary>
         /// True if the logged in user is following this user.
         /// </summary>
-        public bool Following { get; private set; }
+        private bool following { get; set; }
+
+        /// <summary>
+        /// Checks if the authenticated user is following the given user, response is cached
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <returns></returns>
+        public async Task<bool> GetFollowingAsync(Connection conn)
+        {
+            if(!infoComplete)
+            {
+                await getFullUser(conn);
+                infoComplete = true;
+            }
+
+            return following;
+        }
+
+        private async Task getFullUser(Connection conn)
+        {
+            JSONRepresentations.Get.User u = await conn.GetRawUser(this.UserId);
+
+            following = u.following;
+            rawTimeline = u.timeline;
+            bio = u.bio;
+        }
 
         /// <summary>
         /// The biography of the user.
         /// </summary>
-        public string Bio { get; private set; }
+        private string bio { get; set; }
+
+        /// <summary>
+        /// Retreives the biography of the user. Response is cached.
+        /// </summary>
+        /// <param name="conn"></param>
+        /// <returns></returns>
+        public async Task<string> GetBioAsync(Connection conn)
+        {
+            if (!infoComplete)
+            {
+                await getFullUser(conn);
+                infoComplete = true;
+            }
+
+            return bio;
+        }
+
+        private bool infoComplete = false;
 
         /// <summary>
         /// Retreives the Timeline for the user asynchronously. The timeline will be retreived from memory, if the posts already have been loaded.
@@ -56,6 +99,12 @@ namespace SparklrSharp.Sparklr
         /// <returns>A read only collection</returns>
         public async Task<ReadOnlyCollection<Post>> GetTimelineAsync(Connection conn)
         {
+            if(!infoComplete)
+            {
+                await getFullUser(conn);
+                infoComplete = false;
+            }
+
             // TODO: Check if timeline has new posts
             if(timeline == null)
             {
@@ -104,19 +153,44 @@ namespace SparklrSharp.Sparklr
             return userCache[userid];
         }
 
+        internal static void AddDeletedUser(int id)
+        {
+            if (!deletedUsers.Contains(id))
+                deletedUsers.Add(id);
+        }
+
         internal static User InstanciateUser(int userid, string name, string handle, long avatarid, bool following, string bio)
         {
             if (!userCache.ContainsKey(userid))
             {
                 User u = new User(userid, name, handle, avatarid, following, bio);
                 userCache.Add(userid, u);
+#if DEBUG
+                if (System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debug.WriteLine("Added user #{0} to cache", u.UserId);
+#endif
+            }
+
+            return userCache[userid];
+        }
+
+        internal static User InstanciateUser(int userid, string name, string handle, long avatarid)
+        {
+            if(!userCache.ContainsKey(userid))
+            {
+                User u = new User(userid, name, handle, avatarid);
+                userCache.Add(userid, u);
+#if DEBUG
+                if (System.Diagnostics.Debugger.IsAttached)
+                    System.Diagnostics.Debug.WriteLine("Added user #{0} to cache", u.UserId);
+#endif
             }
 
             return userCache[userid];
         }
 
         /// <summary>
-        /// You most likely don't want to call this. Use CreateUser instead.
+        /// You most likely don't want to call this. Use InstanciateUser instead.
         /// </summary>
         /// <param name="userid">the id</param>
         /// <param name="name">the name</param>
@@ -130,8 +204,22 @@ namespace SparklrSharp.Sparklr
             this.Name = name;
             this.Handle = handle;
             this.AvatarId = avatarid;
-            this.Following = following;
-            this.Bio = bio;
+            this.following = following;
+            this.bio = bio;
+
+            infoComplete = true;
+
+            this.rawTimeline = new List<JSONRepresentations.Get.Post>();
+        }
+
+        private User(int userid, string name, string handle, long avatarid)
+        {
+            this.UserId = userid;
+            this.Name = name;
+            this.Handle = handle;
+            this.AvatarId = avatarid;
+
+            infoComplete = false;
 
             this.rawTimeline = new List<JSONRepresentations.Get.Post>();
         }

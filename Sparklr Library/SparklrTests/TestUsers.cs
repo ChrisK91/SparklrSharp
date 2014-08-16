@@ -32,8 +32,8 @@ namespace SparklrTests
             User u = await conn.GetUserAsync(testUserId);
 
             Assert.AreEqual(u.AvatarId, testAvatarId);
-            Assert.AreEqual(u.Bio, testBio);
-            Assert.AreEqual(u.Following, testFollowing);
+            Assert.AreEqual(await u.GetBioAsync(conn), testBio);
+            Assert.AreEqual(await u.GetFollowingAsync(conn), testFollowing);
             Assert.AreEqual(u.Handle, testHandle);
             Assert.AreEqual(u.Name, testName);
             Assert.AreEqual(u.UserId, testUserId);

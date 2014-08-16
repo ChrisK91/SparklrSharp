@@ -32,6 +32,18 @@ namespace SparklrSharp
         {
             List<Post> posts = new List<Post>();
 
+            List<int> userInfoToRetreive = new List<int>();
+
+            foreach(JSONRepresentations.Get.Post p in response.Response)
+            {
+                userInfoToRetreive.Add(p.from);
+
+                if(p.via != null)
+                    userInfoToRetreive.Add((int)p.via);
+            }
+
+            await this.IdentifyMultipleUsersAsync(userInfoToRetreive.ToArray());
+
             foreach (JSONRepresentations.Get.Post p in response.Response)
             {
                 Post po = await Post.InstanciatePostAsync(p, this);

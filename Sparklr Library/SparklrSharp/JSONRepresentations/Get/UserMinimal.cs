@@ -19,5 +19,15 @@ namespace SparklrSharp.JSONRepresentations.Get
         /// The username
         /// </summary>
         public string username { get; set; }
+
+        /// <summary>
+        /// The displayname
+        /// </summary>
+        public string displayname { get; set; }
+
+        /// <summary>
+        /// The avatarid
+        /// </summary>
+        public long avatarid { get; set; }
     }
 }
