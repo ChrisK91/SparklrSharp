@@ -42,7 +42,8 @@ namespace SparklrSharp
                     userInfoToRetreive.Add((int)p.via);
             }
 
-            await this.IdentifyMultipleUsersAsync(userInfoToRetreive.ToArray());
+            if(userInfoToRetreive.Count > 0)
+                await this.IdentifyMultipleUsersAsync(userInfoToRetreive.ToArray());
 
             foreach (JSONRepresentations.Get.Post p in response.Response)
             {

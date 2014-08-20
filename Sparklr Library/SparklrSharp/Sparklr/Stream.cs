@@ -111,7 +111,7 @@ namespace SparklrSharp.Sparklr
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
-                System.Diagnostics.Debug.WriteLine("Loading posts starting from {0} for {1}", oldestTimestamp, Name);
+                System.Diagnostics.Debug.WriteLine("Loading older posts starting from {0} for {1}", oldestTimestamp, Name);
 #endif
             Post[] morePosts = await conn.GetStreamAsync(Name, oldestTimestamp);
 
@@ -121,6 +121,27 @@ namespace SparklrSharp.Sparklr
                 return true;
             }
 
+            return false;
+        }
+
+        /// <summary>
+        /// Retreives newer posts for the network and inserts them into Posts
+        /// </summary>
+        /// <param name="conn">The connection on which to run the query</param>
+        /// <returns>True if new posts were available, otherwise false</returns>
+        public async Task<bool> LoadNewerPosts(Connection conn)
+        {
+#if DEBUG
+            if (System.Diagnostics.Debugger.IsAttached)
+                System.Diagnostics.Debug.WriteLine("Loading newer posts starting from {0} for {1}", oldestTimestamp, Name);
+#endif
+            Post[] morePosts = await conn.GetStreamSinceAsync(Name, newestTimestamp + 1);
+
+            if(morePosts.Length > 0)
+            {
+                appendPosts(morePosts);
+                return true;
+            }
             return false;
         }
 

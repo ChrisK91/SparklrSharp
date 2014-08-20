@@ -84,10 +84,9 @@ namespace SampleApplication.cs
                 while (conn.CurrentUser == null)
                     Thread.Sleep(100);
 
-                var u = await conn.CurrentUser.GetMentionsAsync(conn);
-
                 //Get the number of notifications
                 Notification[] notifications = await conn.GetNotificationsAsync();
+
                 Console.WriteLine("You have {0} notifications:", notifications.Length);
 
                 foreach (Notification n in notifications)
