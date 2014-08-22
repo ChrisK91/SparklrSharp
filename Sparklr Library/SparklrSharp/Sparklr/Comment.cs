@@ -7,6 +7,21 @@ using System.Threading.Tasks;
 namespace SparklrSharp.Sparklr
 {
     /// <summary>
+    /// Represents the type of comment
+    /// </summary>
+    public enum CommentType
+    {
+        /// <summary>
+        /// The Comment is a comment
+        /// </summary>
+        Comment,
+        /// <summary>
+        /// The Comment is a like
+        /// </summary>
+        Like
+    }
+
+    /// <summary>
     /// Represents a comment on the sparklr service
     /// </summary>
     public class Comment : IComparable<Comment>
@@ -27,9 +42,39 @@ namespace SparklrSharp.Sparklr
         public User Author { get; private set; }
 
         /// <summary>
-        /// The message of the comment
+        /// The message of the comment. If it's a comment, this will contain "👆".
+        /// Use .ToString() to get either the Comment or "{User} likes this" instead
         /// </summary>
         public String Message { get; private set; }
+
+        /// <summary>
+        /// Returns either the comment text or "{User} likes this"
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            if(this.Type == CommentType.Comment)
+            {
+                return this.Message;
+            }
+            else
+            {
+                return String.Format("{0} likes this", Author.Name);
+            }
+        }
+
+        private const string LIKE_CHARACTER = "☝";
+
+        /// <summary>
+        /// Returns the type of this comment
+        /// </summary>
+        public CommentType Type
+        {
+            get
+            {
+                return Message == LIKE_CHARACTER ? CommentType.Like : CommentType.Comment;
+            }
+        }
 
         /// <summary>
         /// The timestamp of the comment
